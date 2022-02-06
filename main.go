@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
 	//type deck []string
 	cards := newDeck()
@@ -7,6 +9,9 @@ func main() {
 	hand.printcards()
 	remainingcard.printcards()
 	println(cards.toString())
+	cards.saveToFile("FirstDeck")
+	newDeckReadFromFile := newDeckFromFile("FirstDeck")
+	fmt.Println("From File   : ", newDeckReadFromFile)
 }
 
 func newCard() string {
