@@ -15,7 +15,8 @@ func main() {
 
 	cards.shuffle()
 
-	fmt.Println("Shuffled Cards \n", cards)
+	fmt.Println("Shuffled Cards")
+	cards.printcards()
 }
 
 func newCard() string {
