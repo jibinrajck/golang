@@ -1,0 +1,29 @@
+def update_security_groups(cluster_name, sg_ids, action)
+  client = aws_helper.ec2_client(**client_args)
+  sg_ids.each do |sg|
+    tags = [{ key: "kubernetes.io/cluster/#{cluster_name}", value: "shared" }]
+    if action == :create
+      client.create_tags(resources: [sg], tags: tags)
+    elsif action == :delete
+      client.delete_tags(resources: [sg], tags: tags)
+    end
+  end
+end
+
+def component_post_deploy
+  super
+  cluster_name = get_cluster_name
+  puts "cluster_name-#{cluster_name}"
+  sg_ids = sg_ids(Arturo: :SGE: :MAIN_SUB_COMPONENT, allow_exports: false)
+  puts "sg_ids-#{sg_ids}"
+  update_security_groups(cluster_name, sg_ids, :create)
+end
+
+def component_teardown
+  super
+  cluster_name = get_cluster_name
+  puts "cluster_name-#{cluster_name}"
+  sg_ids = sg_ids(Arturo: :SGE: :MAIN_SUB_COMPONENT, allow_exports: false)
+  puts "sg_ids-#{sg_ids}"
+  update_security_groups(cluster_name, sg_ids, :delete)
+end
